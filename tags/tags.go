@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/bogem/id3v2"
-	"github.com/joshwi/go-utils/logger"
-	"github.com/joshwi/go-utils/utils"
+	"github.com/joshwi/go-pkg/logger"
+	"github.com/joshwi/go-pkg/utils"
 )
 
 var (

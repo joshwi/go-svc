@@ -55,6 +55,66 @@ func RunCypher(session neo4j.Session, query string) ([][]utils.Tag, error) {
 	return output, nil
 }
 
+func GetNode(session neo4j.Session, node string, query string, limit int, properties []string) ([]map[string]string, error) {
+
+	output := []map[string]string{}
+
+	cypher := `MATCH (n: ` + node + `) `
+
+	if len(query) > 0 {
+		cypher += `WHERE ` + query + ` RETURN `
+	}
+
+	if len(properties) > 0 {
+		for n, item := range properties {
+			if n == 0 {
+				cypher += fmt.Sprintf(`n.%v as %v`, item, item)
+			} else {
+				cypher += fmt.Sprintf(`, n.%v as %v`, item, item)
+			}
+
+		}
+	} else {
+		cypher += `n as n`
+	}
+
+	if limit > 0 {
+		cypher += fmt.Sprintf(` LIMIT %v`, limit)
+	}
+
+	result, err := session.Run(cypher, map[string]interface{}{})
+	if err != nil {
+		logger.Logger.Error().Str("node", node).Str("query", query).Err(err).Msg("GetNode")
+		return output, err
+	}
+
+	if len(properties) > 0 {
+		for result.Next() {
+			entry := map[string]string{}
+			keys := result.Record().Keys
+			for n := 0; n < len(keys); n++ {
+				value := fmt.Sprintf("%v", result.Record().GetByIndex(n))
+				entry[keys[n]] = value
+			}
+			output = append(output, entry)
+		}
+	} else {
+		for result.Next() {
+			record := map[string]string{}
+			temp, _ := result.Record().Get("n")
+			node_props := temp.(neo4j.Node).Props
+			for k, v := range node_props {
+				record[k] = v.(string)
+			}
+			output = append(output, record)
+		}
+	}
+
+	logger.Logger.Info().Str("node", node).Str("query", query).Msg("GetNode")
+
+	return output, nil
+}
+
 func PostNode(session neo4j.Session, node string, label string, properties []utils.Tag) error {
 
 	cypher := `CREATE (n: ` + node + ` { label: "` + label + `" })`

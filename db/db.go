@@ -63,6 +63,8 @@ func GetNode(session neo4j.Session, node string, query string, limit int, proper
 
 	if len(query) > 0 {
 		cypher += `WHERE ` + query + ` RETURN `
+	} else {
+		cypher += ` RETURN `
 	}
 
 	if len(properties) > 0 {

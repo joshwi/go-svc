@@ -2,7 +2,9 @@ package db
 
 import (
 	"fmt"
+	"math"
 	"regexp"
+	"time"
 
 	"github.com/joshwi/go-pkg/logger"
 	"github.com/joshwi/go-pkg/utils"
@@ -154,4 +156,52 @@ func PutNode(session neo4j.Session, node string, label string, properties []util
 
 	return nil
 
+}
+
+func RunTransactions(session neo4j.Session, commands []string) error {
+
+	start := time.Now()
+
+	err_list := []error{}
+
+	for _, command := range commands {
+		_, err := session.WriteTransaction(func(tx neo4j.Transaction) (interface{}, error) {
+			_, err := tx.Run(command, map[string]interface{}{})
+			if err != nil {
+				return nil, err
+			}
+			err_list = append(err_list, nil)
+			logger.Logger.Info().Str("command", command).Str("status", "success").Msg("RunTransactions")
+			// return result.Consume()
+			return nil, nil
+		})
+		if err != nil {
+			logger.Logger.Error().Str("command", command).Str("status", "failed").Err(err).Msg("RunTransactions")
+			err_list = append(err_list, err)
+		}
+	}
+
+	counter := 0
+
+	// Count up errors
+	for _, entry := range err_list {
+		if entry == nil {
+			counter++
+		}
+	}
+
+	// Quick mafs
+	end := time.Now()
+	elapsed := end.Sub(start)
+	duration := fmt.Sprintf("%v", elapsed.Round(time.Second/1000))
+	percent := 0.0
+	if counter > 0 {
+		percent = (float64(counter) / float64(len(err_list))) * 100.0
+	}
+
+	success := fmt.Sprintf("%v%%", math.Round(percent*100)/100)
+
+	logger.Logger.Info().Str("duration", duration).Str("success", success).Int("completed", counter).Int("total", len(err_list)).Msg("RunTransactions")
+
+	return nil
 }

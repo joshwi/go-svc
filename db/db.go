@@ -194,7 +194,7 @@ func RunTransactions(session neo4j.Session, commands []string) error {
 	end := time.Now()
 	elapsed := end.Sub(start)
 	duration := fmt.Sprintf("%v", elapsed.Round(time.Second/1000))
-	percent := 0.0
+	percent := 100.0
 	if counter > 0 {
 		percent = (float64(counter) / float64(len(err_list))) * 100.0
 	}

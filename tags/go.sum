@@ -4,6 +4,8 @@ github.com/coreos/go-systemd/v22 v22.3.2/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSV
 github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
 github.com/joshwi/go-pkg v0.0.0 h1:UupJhqTRsiETEitbsi6PnTfZ+GsRBpfTKKqefTGag2I=
 github.com/joshwi/go-pkg v0.0.0/go.mod h1:8RCfPZhV4voqzoBDNm40o2boC53i0WOlQn6qBFjB0TE=
+github.com/joshwi/go-pkg v0.0.1 h1:b3ns24D1eJYVKiV9Jwhk6QGnOE4F1fdE4NTdN3Sa8MA=
+github.com/joshwi/go-pkg v0.0.1/go.mod h1:8RCfPZhV4voqzoBDNm40o2boC53i0WOlQn6qBFjB0TE=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/rs/xid v1.3.0/go.mod h1:trrq9SKmegXys3aeAKXMUTdJsYXVwGY3RLcfgqegfbg=
 github.com/rs/zerolog v1.26.1 h1:/ihwxqH+4z8UxyI70wM1z9yCvkWcfz/a3mj48k/Zngc=
